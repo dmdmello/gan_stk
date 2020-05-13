@@ -25,18 +25,19 @@ def distribution_select(dist, shape):
     
 class arg_parser_handler():
     def __init__(self,
-        n_epochs = 500,
-        batch_size = 100,
-        lr = 0.0002,
+        n_epochs = 25,
+        batch_size = 64,
+        lr1 = 0.0002,
+        lr2 = 0.0002,
         b1 = 0.5,
         b2 = 0.999,
         n_cpu = 12,
         latent_dim = 100,
-        img_size = 28,
-        channels = 1,
+        img_size = 32,
+        channels = 3,
         sample_interval = 400,
-        n_paths_G = 2,
-        classifier_para = 1.0,
+        n_paths_G = 10,
+        classifier_para = 0.1,
         vae_name = None,
         dim1 = 256,
         dim2 = 64,
@@ -45,7 +46,8 @@ class arg_parser_handler():
         
         self.n_epochs = n_epochs
         self.batch_size = batch_size
-        self.lr = lr
+        self.lr1 = lr1
+        self.lr2 = lr2
         self.b1 = b1
         self.b2 = b2
         self.n_cpu = n_cpu
@@ -61,12 +63,13 @@ class arg_parser_handler():
         self.min_size_dataset = min_size_dataset
         
     def parser_maker(self):
-        
-        try: 
+
+        try:
             parser = argparse.ArgumentParser()
             parser.add_argument('--n_epochs', type=int, default=self.n_epochs, help='number of epochs of training')
             parser.add_argument('--batch_size', type=int, default=self.batch_size, help='size of the batches')
-            parser.add_argument('--lr', type=float, default=self.lr, help='adam: learning rate')
+            parser.add_argument('--lr1', type=float, default=self.lr1, help='adam: learning rate 1')
+            parser.add_argument('--lr2', type=float, default=self.lr2, help='adam: learning rate 2')
             parser.add_argument('--b1', type=float, default=self.b1, help='adam: decay of first order momentum of gradient')
             parser.add_argument('--b2', type=float, default=self.b2, help='adam: decay of first order momentum of gradient')
             parser.add_argument('--n_cpu', type=int, default=self.n_cpu, help='number of cpu threads to use during batch generation')
@@ -76,12 +79,12 @@ class arg_parser_handler():
             parser.add_argument('--sample_interval', type=int, default=self.sample_interval, help='interval betwen image samples')
             parser.add_argument('--n_paths_G', type=int, default=self.n_paths_G, help='number of paths of generator')
             parser.add_argument('--classifier_para', type=float, default=self.classifier_para, help='regularization parameter for classifier')
-            
+
             parser.add_argument('--vae_name', type=str, default=self.vae_name, help='name of pretrained vae')
             parser.add_argument('--dim1', type=int, default=self.dim1, help='classifier first layer dimension')
             parser.add_argument('--dim2', type=int, default=self.dim2, help='classifier second layer dimension')
             parser.add_argument('--min_size_dataset', type=int, default=self.min_size_dataset, help='classifier second layer dimension')
-            
+        
             return parser.parse_args(), 0
         except:
             return arg_parser_handler(), 1
